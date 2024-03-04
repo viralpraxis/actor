@@ -385,6 +385,13 @@ RSpec.describe Actor do
       end
     end
 
+    context "when `type` options accepts a module" do
+      it "succeeds" do
+        expect(ActorWithModuleInput.call(module_const: Integer).module_name)
+          .to eq("Integer")
+      end
+    end
+
     context "when setting the wrong type of output" do
       context "when normal mode" do
         let(:expected_message) do
@@ -810,6 +817,20 @@ RSpec.describe Actor do
       it do
         expect { actor }.to raise_error(
           ArgumentError, /Expected .+ to be a subclass of Exception/
+        )
+      end
+    end
+
+    context "with `type` that contains non-type object" do
+      let(:actor) do
+        Class.new(Actor) do
+          input :value, type: [Integer, Float, Object.new]
+        end
+      end
+
+      it do
+        expect { actor }.to raise_error(
+          ArgumentError, /Expected .+ to be a module or a module name/
         )
       end
     end
