@@ -60,7 +60,7 @@ module ServiceActor::Defaultable
     def apply_default_for_origin(origin_name, origin_options)
       default = origin_options[:default]
 
-      if default.is_a?(Hash) && default[:is]
+      if default.is_a?(Hash) && default.key?(:is)
         default_for_advanced_mode_with(result, origin_name, default)
       else
         default_for_normal_mode_with(result, origin_name, default)
@@ -72,15 +72,11 @@ module ServiceActor::Defaultable
     end
 
     def default_for_advanced_mode_with(result, key, content)
-      default, message = content.values_at(:is, :message)
-
-      unless default
-        raise_error_with(message, input_key: key, actor: self.class)
+      unless content.key?(:is)
+        raise_error_with(content.fetch(:message), input_key: key, actor: self.class)
       end
 
-      result[key] = reify_default(result, default)
-
-      message.call(key, self.class)
+      result[key] = reify_default(result, content.fetch(:is))
     end
 
     # Raises an error depending on the mode

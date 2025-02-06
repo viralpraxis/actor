@@ -152,6 +152,53 @@ RSpec.describe Actor do
       end
     end
 
+    context "with advanced mode and falsey default" do
+      context "with `nil` value" do
+        let(:actor) do
+          Class.new(Actor) do
+            output :value, default: {
+              is: nil,
+              message: "Generic message",
+            }
+          end
+        end
+
+        it "raises expected error" do
+          expect(actor.call.value).to be_nil
+        end
+      end
+
+      context "with `false` value" do
+        let(:actor) do
+          Class.new(Actor) do
+            output :value, default: {
+              is: false,
+              message: "Generic message",
+            }
+          end
+        end
+
+        it "raises expected error" do
+          expect(actor.call.value).to be(false)
+        end
+      end
+    end
+
+    context "with advanced mode and falsey default and lambda message" do
+      let(:actor) do
+        Class.new(Actor) do
+          output :value, default: {
+            is: nil,
+            message: -> input_key:, ** { "Generic message: #{input_key}" },
+          }
+        end
+      end
+
+      it "assigns `nil` value" do
+        expect(actor.call.value).to be_nil
+      end
+    end
+
     context "when an input has a lambda default" do
       it "adds it to the context" do
         actor = AddGreetingWithLambdaDefault.call

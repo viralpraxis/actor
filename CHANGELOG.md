@@ -5,6 +5,9 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## unreleased
 
+Fixes:
+- Fix default value assignment when using advanced mode with falsey `is` key.
+
 Feature:
 - Allow `output` to accept procs as defaults. (#188)
 - Allow any object that responds to `===` to be used as a type. (#187)
