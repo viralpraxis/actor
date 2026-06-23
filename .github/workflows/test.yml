@@ -1,6 +1,9 @@
 name: Test
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [main]
+  pull_request:
 
 env:
   RUBYOPT: --enable-frozen-string-literal --debug-frozen-string-literal
